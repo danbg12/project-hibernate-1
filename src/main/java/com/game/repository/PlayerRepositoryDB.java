@@ -1,8 +1,11 @@
 package com.game.repository;
 
 import com.game.entity.Player;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PreDestroy;
@@ -22,12 +25,21 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public List<Player> getAll(int pageNumber, int pageSize) {
-        return null;
+        try (final Session session = sessionFactory.openSession()) {
+            final NativeQuery<Player> nativeQuery = session
+                    .createNativeQuery("SELECT * FROM rpg.player", Player.class)
+                    .setFirstResult(pageNumber)
+                    .setMaxResults(pageSize);
+            return nativeQuery.getResultList();
+        }
     }
 
     @Override
     public int getAllCount() {
-        return 0;
+        try (final Session session = sessionFactory.openSession()) {
+            final Query<Integer> namedQuery = session.createNamedQuery("First.query", Integer.class);
+            return namedQuery.getSingleResult();
+        }
     }
 
     @Override
@@ -52,6 +64,8 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @PreDestroy
     public void beforeStop() {
-
+        try (final Session session = sessionFactory.openSession()) {
+            session.close();
+        }
     }
 }

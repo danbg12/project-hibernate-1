@@ -7,10 +7,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import java.util.Date;
 
+@NamedQueries(
+        @NamedQuery(
+                name = "First.query" ,
+                query = "select count(name) from Player")
+)
 @Entity
 @Table(name = "player" , schema = "rpg")
 public class Player {
