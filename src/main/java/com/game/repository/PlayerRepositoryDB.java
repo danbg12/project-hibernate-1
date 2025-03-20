@@ -66,9 +66,8 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     @Override
     public Optional<Player> findById(long id) {
         try (final Session session = sessionFactory.openSession()) {
-
+            return Optional.ofNullable(session.find(Player.class, id));
         }
-        return Optional.empty();
     }
 
     @Override
